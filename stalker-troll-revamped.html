@@ -1,0 +1,644 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#09090f" />
+  <title>Caught You 👀</title>
+
+  <style>
+    :root {
+      --bg: #08080d;
+      --panel: rgba(19, 19, 30, 0.82);
+      --panel-strong: #12121d;
+      --text: #f7f7fb;
+      --muted: #a7a7b8;
+      --line: rgba(255, 255, 255, 0.09);
+      --purple: #8b5cf6;
+      --pink: #ff4db8;
+      --blue: #59c7ff;
+      --green: #42e58f;
+      --shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255, 77, 184, 0.18), transparent 28%),
+        radial-gradient(circle at 82% 16%, rgba(89, 199, 255, 0.14), transparent 26%),
+        radial-gradient(circle at 80% 82%, rgba(139, 92, 246, 0.18), transparent 31%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.055;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+
+    .shell {
+      width: min(980px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 60px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .window {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+      overflow: hidden;
+    }
+
+    .window-bar {
+      min-height: 56px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .traffic {
+      display: flex;
+      gap: 8px;
+    }
+
+    .traffic i {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .traffic i:nth-child(1) { background: #ff5f57; }
+    .traffic i:nth-child(2) { background: #ffbd2e; }
+    .traffic i:nth-child(3) { background: #28c840; }
+
+    .window-label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .content {
+      padding: clamp(24px, 5vw, 54px);
+    }
+
+    .badge {
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      background: rgba(139, 92, 246, 0.08);
+      color: #c8b5ff;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      max-width: 760px;
+      font-size: clamp(3rem, 9vw, 7rem);
+      line-height: 0.92;
+      letter-spacing: -0.065em;
+    }
+
+    h1 span {
+      background: linear-gradient(90deg, var(--pink), #ff8ed3 45%, var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 690px;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+    }
+
+    .scan-box {
+      margin-top: 30px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      background: rgba(255,255,255,.022);
+    }
+
+    .scan-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .bar {
+      height: 12px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: #1a1a25;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.04);
+    }
+
+    .fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--purple), var(--pink), var(--blue));
+      box-shadow: 0 0 30px rgba(255, 77, 184, 0.35);
+      transition: width 0.18s ease;
+    }
+
+    .terminal {
+      min-height: 156px;
+      margin-top: 16px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #09090f;
+      color: #cfcfe0;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.87rem;
+      overflow: hidden;
+    }
+
+    .terminal-line {
+      opacity: 0;
+      transform: translateY(6px);
+      animation: appear .28s forwards;
+      margin: 6px 0;
+    }
+
+    @keyframes appear {
+      to { opacity: 1; transform: none; }
+    }
+
+    .actions {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+      min-height: 56px;
+    }
+
+    button, .link-btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover, .link-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .primary {
+      color: white;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      box-shadow: 0 14px 38px rgba(255, 77, 184, 0.25);
+    }
+
+    .ghost {
+      color: var(--text);
+      background: #1a1a25;
+      border: 1px solid var(--line);
+    }
+
+    #runaway {
+      position: relative;
+      transition: transform .18s ease;
+    }
+
+    .reveal {
+      display: none;
+      margin-top: 24px;
+      border: 1px solid rgba(66, 229, 143, 0.25);
+      border-radius: 20px;
+      padding: 22px;
+      background: rgba(66, 229, 143, 0.055);
+    }
+
+    .reveal.show {
+      display: block;
+      animation: pop .35s ease;
+    }
+
+    @keyframes pop {
+      from { opacity: 0; transform: scale(.98) translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .reveal h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+    }
+
+    .reveal p {
+      color: #c9dbd0;
+      margin: 0;
+    }
+
+    .identity-wrap {
+      display: none;
+      margin-top: 22px;
+    }
+
+    .identity-wrap.show {
+      display: block;
+      animation: pop .35s ease;
+    }
+
+    .identity-title {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+    }
+
+    .identity-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .identity-card {
+      text-align: left;
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.018));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .identity-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(139, 92, 246, 0.5);
+    }
+
+    .identity-card strong {
+      display: block;
+      font-size: 1.12rem;
+      margin-bottom: 4px;
+    }
+
+    .identity-card span {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .profile {
+      display: none;
+      margin-top: 16px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+    }
+
+    .profile.show {
+      display: block;
+      animation: pop .3s ease;
+    }
+
+    .profile h3 {
+      margin: 0 0 6px;
+      font-size: 1.4rem;
+    }
+
+    .profile p {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .socials {
+      display: grid;
+      gap: 10px;
+    }
+
+    .social-link {
+      padding: 13px 14px;
+      border-radius: 13px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.025);
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 850;
+      transition: .2s ease;
+    }
+
+    .social-link:hover {
+      transform: translateX(4px);
+      border-color: rgba(255, 77, 184, .4);
+    }
+
+    .fine-print {
+      margin-top: 18px;
+      text-align: center;
+      color: #77778a;
+      font-size: .78rem;
+    }
+
+    .shake {
+      animation: shake .35s linear;
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-7px); }
+      75% { transform: translateX(7px); }
+    }
+
+    @media (max-width: 680px) {
+      .identity-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      button, .link-btn {
+        width: 100%;
+      }
+
+      #runaway {
+        position: relative;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="shell">
+    <section class="window" id="window">
+      <div class="window-bar">
+        <div class="traffic">
+          <i></i><i></i><i></i>
+        </div>
+        <div class="window-label">visitor-checker.exe</div>
+      </div>
+
+      <div class="content">
+        <div class="badge">private profile security</div>
+
+        <h1>caught you <span>stalking.</span> 👀</h1>
+        <p class="lead">
+          This page performs a highly scientific analysis of how curious you are.
+          Results may be emotionally damaging.
+        </p>
+
+        <div class="scan-box">
+          <div class="scan-top">
+            <span id="scanStatus">ready to inspect suspicious visitor...</span>
+            <strong id="percent">0%</strong>
+          </div>
+
+          <div class="bar">
+            <div class="fill" id="fill"></div>
+          </div>
+
+          <div class="terminal" id="terminal">
+            <div>&gt; waiting for someone who definitely "wasn't stalking"...</div>
+          </div>
+
+          <div class="actions" id="actions">
+            <button class="primary" id="scanBtn">scan me anyway</button>
+            <button class="ghost" id="runaway">nope, I wasn't stalking</button>
+          </div>
+        </div>
+
+        <section class="reveal" id="reveal">
+          <h2>scan complete: certified nosy person 😂</h2>
+          <p>
+            No IP stolen, no camera opened, and no private data collected.
+            You just clicked because you wanted to know too much.
+          </p>
+        </section>
+
+        <section class="identity-wrap" id="identityWrap">
+          <h3 class="identity-title">Alright... how do you know me?</h3>
+
+          <div class="identity-grid">
+            <button class="identity-card" data-profile="dazel">
+              <strong>I know you as Dazel</strong>
+              <span>streaming / creator side</span>
+            </button>
+
+            <button class="identity-card" data-profile="cartier">
+              <strong>I know you as Cart1er</strong>
+              <span>AKA Cart1er / chaos side</span>
+            </button>
+          </div>
+
+          <div class="profile" id="dazelProfile">
+            <h3>Dazel</h3>
+            <p>So you found the streaming side. Fair enough.</p>
+
+            <div class="socials">
+              <a class="social-link" href="https://www.tiktok.com/@decartierrr" target="_blank" rel="noopener noreferrer">
+                <span>🎵 TikTok — @decartierrr</span><span>↗</span>
+              </a>
+
+              <a class="social-link" href="https://www.youtube.com/@dazelxml" target="_blank" rel="noopener noreferrer">
+                <span>▶️ YouTube — @dazelxml</span><span>↗</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="profile" id="cartierProfile">
+            <h3>Cart1er</h3>
+            <p>So you know the AKA Cart1er version. Interesting choice.</p>
+
+            <div class="socials">
+              <a class="social-link" href="https://www.instagram.com/decartierrr/" target="_blank" rel="noopener noreferrer">
+                <span>📷 Instagram — @decartierrr</span><span>↗</span>
+              </a>
+
+              <a class="social-link" href="https://www.tiktok.com/@aliiyourbae" target="_blank" rel="noopener noreferrer">
+                <span>🎵 TikTok — @aliiyourbae</span><span>↗</span>
+              </a>
+
+              <a class="social-link" href="https://t.me/valhallagroupx" target="_blank" rel="noopener noreferrer">
+                <span>💬 Telegram — valhallagroupx</span><span>↗</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <div class="fine-print">
+          entertainment only • no tracking • no data collection
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const scanBtn = document.getElementById("scanBtn");
+    const runaway = document.getElementById("runaway");
+    const fill = document.getElementById("fill");
+    const percent = document.getElementById("percent");
+    const scanStatus = document.getElementById("scanStatus");
+    const terminal = document.getElementById("terminal");
+    const reveal = document.getElementById("reveal");
+    const identityWrap = document.getElementById("identityWrap");
+    const windowEl = document.getElementById("window");
+    const actions = document.getElementById("actions");
+    const dazelProfile = document.getElementById("dazelProfile");
+    const cartierProfile = document.getElementById("cartierProfile");
+
+    let scanning = false;
+    let escapeCount = 0;
+
+    const messages = [
+      "checking curiosity level...",
+      "detecting suspicious profile revisits...",
+      "searching for accidental screenshots...",
+      "measuring stalking intensity...",
+      "calculating 'I was just curious' probability...",
+      "finalizing embarrassing report..."
+    ];
+
+    function addLine(text, delay = 0) {
+      setTimeout(() => {
+        const line = document.createElement("div");
+        line.className = "terminal-line";
+        line.textContent = "> " + text;
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+      }, delay);
+    }
+
+    function moveRunawayButton() {
+      escapeCount += 1;
+
+      const maxX = Math.max(60, actions.clientWidth - runaway.offsetWidth - 10);
+      const maxY = 95;
+
+      const x = Math.floor(Math.random() * maxX) - maxX / 2;
+      const y = Math.floor(Math.random() * maxY) - maxY / 2;
+
+      runaway.style.transform = `translate(${x}px, ${y}px) rotate(${(Math.random() * 10) - 5}deg)`;
+
+      const labels = [
+        "nice try 😭",
+        "why are you chasing me?",
+        "just admit it 😂",
+        "still not stalking?",
+        "bro give up"
+      ];
+
+      runaway.textContent = labels[Math.min(escapeCount - 1, labels.length - 1)];
+    }
+
+    runaway.addEventListener("mouseenter", moveRunawayButton);
+    runaway.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      moveRunawayButton();
+    });
+
+    runaway.addEventListener("click", moveRunawayButton);
+
+    scanBtn.addEventListener("click", () => {
+      if (scanning) return;
+
+      scanning = true;
+      reveal.classList.remove("show");
+      identityWrap.classList.remove("show");
+      dazelProfile.classList.remove("show");
+      cartierProfile.classList.remove("show");
+
+      terminal.innerHTML = "<div>&gt; scan initiated...</div>";
+      fill.style.width = "0%";
+      percent.textContent = "0%";
+      scanBtn.disabled = true;
+      scanBtn.textContent = "scanning...";
+      runaway.style.display = "none";
+
+      messages.forEach((message, index) => addLine(message, 420 * (index + 1)));
+
+      let value = 0;
+      const timer = setInterval(() => {
+        value += Math.floor(Math.random() * 8) + 5;
+        if (value > 100) value = 100;
+
+        fill.style.width = value + "%";
+        percent.textContent = value + "%";
+        scanStatus.textContent = value < 100 ? "analyzing visitor behavior..." : "analysis complete";
+
+        if (value === 100) {
+          clearInterval(timer);
+
+          setTimeout(() => {
+            addLine("result: extreme stalker energy detected 😂");
+            reveal.classList.add("show");
+            identityWrap.classList.add("show");
+            windowEl.classList.add("shake");
+            scanBtn.textContent = "scan again";
+            scanBtn.disabled = false;
+            runaway.style.display = "inline-flex";
+            runaway.textContent = "nope, I wasn't stalking";
+            runaway.style.transform = "none";
+            scanning = false;
+
+            setTimeout(() => windowEl.classList.remove("shake"), 400);
+          }, 550);
+        }
+      }, 155);
+    });
+
+    document.querySelectorAll("[data-profile]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const profile = button.dataset.profile;
+
+        dazelProfile.classList.toggle("show", profile === "dazel");
+        cartierProfile.classList.toggle("show", profile === "cartier");
+      });
+    });
+  </script>
+</body>
+</html>
