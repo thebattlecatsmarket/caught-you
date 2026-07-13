@@ -2,800 +2,361 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#09090f" />
-  <title>Caught You 👀</title>
-
-  <style>
-    :root {
-      --bg: #08080d;
-      --panel: rgba(18, 18, 29, 0.88);
-      --panel-2: #11111b;
-      --text: #f8f8fb;
-      --muted: #a8a8ba;
-      --line: rgba(255, 255, 255, 0.09);
-      --pink: #ff4db8;
-      --purple: #8b5cf6;
-      --blue: #59c7ff;
-      --green: #42e58f;
-      --yellow: #ffd166;
-      --danger: #ff5b6e;
-      --shadow: 0 30px 100px rgba(0, 0, 0, 0.56);
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html {
-      min-height: 100%;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 12% 18%, rgba(255, 77, 184, 0.18), transparent 28%),
-        radial-gradient(circle at 84% 16%, rgba(89, 199, 255, 0.14), transparent 26%),
-        radial-gradient(circle at 80% 84%, rgba(139, 92, 246, 0.18), transparent 31%),
-        var(--bg);
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.05;
-      background-image:
-        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
-      background-size: 28px 28px;
-      mask-image: linear-gradient(to bottom, black, transparent 88%);
-    }
-
-    .shell {
-      width: min(980px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 28px 0 64px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .window {
-      overflow: hidden;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(22px);
-    }
-
-    .window-bar {
-      min-height: 56px;
-      padding: 0 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,.02);
-    }
-
-    .traffic {
-      display: flex;
-      gap: 8px;
-    }
-
-    .traffic i {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      display: block;
-    }
-
-    .traffic i:nth-child(1) { background: #ff5f57; }
-    .traffic i:nth-child(2) { background: #ffbd2e; }
-    .traffic i:nth-child(3) { background: #28c840; }
-
-    .window-label {
-      color: var(--muted);
-      font-size: .82rem;
-      font-weight: 800;
-      letter-spacing: .04em;
-    }
-
-    .content {
-      padding: clamp(24px, 5vw, 54px);
-    }
-
-    .badge {
-      width: fit-content;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(139, 92, 246, .3);
-      background: rgba(139, 92, 246, .08);
-      color: #ccbaff;
-      font-size: .75rem;
-      font-weight: 900;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 18px 0 14px;
-      max-width: 760px;
-      font-size: clamp(3rem, 9vw, 7rem);
-      line-height: .92;
-      letter-spacing: -.065em;
-    }
-
-    h1 span {
-      background: linear-gradient(90deg, var(--pink), #ff8ed3 45%, var(--purple));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .lead {
-      margin: 0;
-      max-width: 700px;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.2vw, 1.15rem);
-    }
-
-    .scan-box {
-      margin-top: 30px;
-      padding: 18px;
-      background: rgba(255,255,255,.022);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-    }
-
-    .scan-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      color: var(--muted);
-      font-size: .9rem;
-      font-weight: 800;
-    }
-
-    .bar {
-      height: 12px;
-      margin-top: 12px;
-      overflow: hidden;
-      background: #1a1a25;
-      border: 1px solid rgba(255,255,255,.04);
-      border-radius: 999px;
-    }
-
-    .fill {
-      width: 0;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--purple), var(--pink), var(--blue));
-      box-shadow: 0 0 30px rgba(255,77,184,.35);
-      transition: width .18s ease;
-    }
-
-    .terminal {
-      min-height: 156px;
-      margin-top: 16px;
-      padding: 15px;
-      overflow: hidden;
-      background: #09090f;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      color: #cfcfe0;
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      font-size: .87rem;
-    }
-
-    .terminal-line {
-      opacity: 0;
-      transform: translateY(6px);
-      animation: appear .28s forwards;
-      margin: 6px 0;
-    }
-
-    @keyframes appear {
-      to { opacity: 1; transform: none; }
-    }
-
-    .actions {
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 20px;
-      min-height: 56px;
-    }
-
-    button {
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 18px;
-      font: inherit;
-      font-weight: 900;
-      cursor: pointer;
-      transition: .2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-    }
-
-    .primary {
-      color: white;
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      box-shadow: 0 14px 38px rgba(255,77,184,.25);
-    }
-
-    .ghost {
-      color: var(--text);
-      background: #1a1a25;
-      border: 1px solid var(--line);
-    }
-
-    #runaway {
-      position: relative;
-      transition: transform .16s ease;
-    }
-
-    .results {
-      display: none;
-      margin-top: 24px;
-    }
-
-    .results.show {
-      display: block;
-      animation: pop .35s ease;
-    }
-
-    @keyframes pop {
-      from { opacity: 0; transform: scale(.98) translateY(8px); }
-      to { opacity: 1; transform: none; }
-    }
-
-    .alert {
-      padding: 20px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,91,110,.27);
-      background: rgba(255,91,110,.055);
-    }
-
-    .alert h2 {
-      margin: 0 0 8px;
-      font-size: clamp(1.7rem, 4vw, 2.6rem);
-    }
-
-    .alert p {
-      margin: 0;
-      color: #e0c9cd;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 16px;
-    }
-
-    .metric {
-      padding: 18px;
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-    }
-
-    .metric span {
-      display: block;
-      color: var(--muted);
-      font-size: .82rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .metric strong {
-      display: block;
-      margin-top: 6px;
-      font-size: clamp(1.5rem, 4vw, 2.2rem);
-    }
-
-    .metric strong.pink { color: #ff8ed3; }
-    .metric strong.green { color: var(--green); }
-    .metric strong.yellow { color: var(--yellow); }
-    .metric strong.blue { color: var(--blue); }
-
-    .truth-box {
-      display: none;
-      margin-top: 18px;
-      padding: 20px;
-      border: 1px solid rgba(66,229,143,.25);
-      border-radius: 20px;
-      background: rgba(66,229,143,.055);
-    }
-
-    .truth-box.show {
-      display: block;
-      animation: pop .35s ease;
-    }
-
-    .truth-box h3 {
-      margin: 0 0 8px;
-      font-size: 1.5rem;
-    }
-
-    .truth-box p {
-      margin: 0;
-      color: #c9dbd0;
-    }
-
-    .choice-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .identity-wrap {
-      display: none;
-      margin-top: 22px;
-    }
-
-    .identity-wrap.show {
-      display: block;
-      animation: pop .35s ease;
-    }
-
-    .identity-title {
-      margin: 0 0 14px;
-      font-size: 1.2rem;
-    }
-
-    .identity-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .identity-card {
-      text-align: left;
-      color: var(--text);
-      background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.018));
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-      cursor: pointer;
-      transition: .2s ease;
-    }
-
-    .identity-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(139,92,246,.5);
-    }
-
-    .identity-card strong {
-      display: block;
-      font-size: 1.12rem;
-      margin-bottom: 4px;
-    }
-
-    .identity-card span {
-      color: var(--muted);
-      font-size: .9rem;
-    }
-
-    .profile {
-      display: none;
-      margin-top: 16px;
-      padding: 20px;
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-    }
-
-    .profile.show {
-      display: block;
-      animation: pop .3s ease;
-    }
-
-    .profile h3 {
-      margin: 0 0 6px;
-      font-size: 1.4rem;
-    }
-
-    .profile p {
-      margin: 0 0 16px;
-      color: var(--muted);
-    }
-
-    .socials {
-      display: grid;
-      gap: 10px;
-    }
-
-    .social-link {
-      padding: 13px 14px;
-      border-radius: 13px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.025);
-      color: var(--text);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: 850;
-      transition: .2s ease;
-    }
-
-    .social-link:hover {
-      transform: translateX(4px);
-      border-color: rgba(255,77,184,.4);
-    }
-
-    .fine-print {
-      margin-top: 18px;
-      text-align: center;
-      color: #77778a;
-      font-size: .78rem;
-    }
-
-    .shake {
-      animation: shake .35s linear;
-    }
-
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      25% { transform: translateX(-7px); }
-      75% { transform: translateX(7px); }
-    }
-
-    .confetti {
-      position: fixed;
-      top: -20px;
-      width: 10px;
-      height: 16px;
-      opacity: .95;
-      z-index: 9999;
-      pointer-events: none;
-      animation: fall linear forwards;
-    }
-
-    @keyframes fall {
-      to {
-        transform: translateY(110vh) rotate(760deg);
-        opacity: .1;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .metrics,
-      .identity-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .actions,
-      .choice-actions {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-
-      button {
-        width: 100%;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>what are you doing here?</title>
+<style>
+:root{
+  --bg:#08090c;
+  --panel:#101115ee;
+  --panel2:#16181f;
+  --text:#f4f4f6;
+  --muted:#aeb3bf;
+  --line:#23252f;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Inter,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top,#24243e55,transparent 40%),
+    radial-gradient(circle at bottom,#11182755,transparent 35%),
+    var(--bg);
+}
+.card{
+  width:min(820px,92%);
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:48px;
+  box-shadow:0 25px 80px rgba(0,0,0,.55);
+  backdrop-filter:blur(12px);
+}
+.small{
+  color:#8f95a3;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  font-size:.75rem;
+  font-weight:700;
+}
+h1{
+  margin:12px 0;
+  font-size:clamp(3rem,8vw,5.8rem);
+  line-height:.92;
+  letter-spacing:-.05em;
+}
+p{
+  color:var(--muted);
+  font-size:1.08rem;
+  line-height:1.7;
+}
+button,a{
+  border:none;
+  padding:14px 22px;
+  border-radius:14px;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  transition:.2s;
+}
+button:hover,a:hover{transform:translateY(-2px)}
+#start{background:#fff;color:#111}
+#deny{
+  background:#191b22;
+  color:#fff;
+  border:1px solid #2a2c36;
+  position:relative;
+}
+#panel{
+  margin-top:28px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.stage{
+  display:none;
+  margin-top:30px;
+  padding:24px;
+  border-radius:18px;
+  background:var(--panel2);
+  border:1px solid #2a2d36;
+}
+.stage.show{
+  display:block;
+  animation:fadeUp .35s ease;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+.verify-bar{
+  height:11px;
+  margin:18px 0 10px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#20222a;
+  border:1px solid #2b2e38;
+}
+#verifyFill{
+  width:0;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#f4f4f6,#777d89);
+  transition:width .12s linear;
+}
+#verifyText{
+  margin-bottom:14px;
+  color:#8f95a3;
+  font-weight:700;
+}
+#scanButton{
+  background:#f4f4f6;
+  color:#111318;
+}
+#scanButton:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+.choice-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.choice-row button{
+  background:#1b1d25;
+  color:#fff;
+  border:1px solid #2b2e38;
+}
+.links{
+  display:grid;
+  gap:10px;
+  margin-top:18px;
+}
+.social-link{
+  width:100%;
+  padding:14px;
+  color:white;
+  background:#1b1d25;
+  border:1px solid #2a2d36;
+  border-radius:12px;
+}
+.social-link img{
+  width:22px;
+  height:22px;
+  object-fit:contain;
+  filter:invert(1);
+}
+.social-link span:last-child{
+  margin-left:auto;
+  color:#7f8490;
+}
+.profile-result{
+  margin-top:22px;
+  padding:22px;
+  border-radius:18px;
+  background:#12141a;
+  border:1px solid #2a2d36;
+}
+.profile-result h3{margin:0 0 6px}
+.profile-result p{margin:0 0 14px}
+.note{
+  margin-top:18px;
+  color:#727784;
+  font-size:.85rem;
+}
+@media(max-width:560px){
+  .card{padding:28px 22px}
+  #panel,.choice-row{display:grid}
+  button,a{width:100%;justify-content:flex-start}
+}
+</style>
 </head>
 
 <body>
-  <main class="shell">
-    <section class="window" id="window">
-      <div class="window-bar">
-        <div class="traffic"><i></i><i></i><i></i></div>
-        <div class="window-label">visitor-checker.exe</div>
-      </div>
+<div class="card">
+  <div class="small">private page</div>
+  <h1>what are you doing here?</h1>
 
-      <div class="content">
-        <div class="badge">private profile security</div>
+  <p>
+    You weren't really supposed to find this page.
+    But since you're already here, let's see how curious you are.
+  </p>
 
-        <h1>caught you <span>stalking.</span> 👀</h1>
-        <p class="lead">
-          This page performs a highly scientific analysis of how curious you are.
-          Results may be emotionally damaging.
-        </p>
+  <div id="panel">
+    <button id="start">I'm just curious</button>
+    <button id="deny">I wasn't stalking</button>
+  </div>
 
-        <div class="scan-box">
-          <div class="scan-top">
-            <span id="scanStatus">ready to inspect suspicious visitor...</span>
-            <strong id="percent">0%</strong>
-          </div>
+  <section id="scannerStage" class="stage">
+    <h2>One quick verification.</h2>
+    <p>Click once and let the scanner finish.</p>
 
-          <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="verify-bar">
+      <div id="verifyFill"></div>
+    </div>
 
-          <div class="terminal" id="terminal">
-            <div>&gt; waiting for someone who definitely "wasn't stalking"...</div>
-          </div>
+    <div id="verifyText">Ready</div>
+    <button id="scanButton">Start verification</button>
+  </section>
 
-          <div class="actions" id="actions">
-            <button class="primary" id="scanBtn">scan me anyway</button>
-            <button class="ghost" id="runaway">nope, I wasn't stalking</button>
-          </div>
-        </div>
+  <section id="identityStage" class="stage">
+    <h2>How do you know me?</h2>
 
-        <section class="results" id="results">
-          <div class="alert">
-            <h2>⚠ High stalker energy detected</h2>
-            <p>
-              Our fake algorithm has completed its completely unnecessary investigation.
-            </p>
-          </div>
+    <div class="choice-row">
+      <button data-profile="dazel">Dazel</button>
+      <button data-profile="cartier">Cart1er</button>
+      <button data-profile="ali">Ali</button>
+    </div>
 
-          <div class="metrics">
-            <div class="metric">
-              <span>Curiosity</span>
-              <strong class="pink">100%</strong>
-            </div>
-            <div class="metric">
-              <span>Screenshot probability</span>
-              <strong class="yellow">87%</strong>
-            </div>
-            <div class="metric">
-              <span>Jealousy level</span>
-              <strong class="blue">HIGH</strong>
-            </div>
-            <div class="metric">
-              <span>Visits this week</span>
-              <strong class="green">37</strong>
-            </div>
-          </div>
+    <div id="content"></div>
+    <div class="note">No tracking. No personal data collection.</div>
+  </section>
+</div>
 
-          <div class="choice-actions">
-            <button class="primary" id="admitBtn">fine, I admit it 😂</button>
-            <button class="ghost" id="proveBtn">no, prove it</button>
-          </div>
-        </section>
+<script>
+const panel = document.getElementById("panel");
+const start = document.getElementById("start");
+const deny = document.getElementById("deny");
+const scannerStage = document.getElementById("scannerStage");
+const identityStage = document.getElementById("identityStage");
+const scanButton = document.getElementById("scanButton");
+const verifyFill = document.getElementById("verifyFill");
+const verifyText = document.getElementById("verifyText");
+const content = document.getElementById("content");
 
-        <section class="truth-box" id="truthBox">
-          <h3>just kidding 😂</h3>
-          <p>
-            No IP stolen, no camera opened, and no private data collected.
-            This entire scan was fake. You just clicked because you were curious.
-          </p>
-        </section>
+function moveDeny(){
+  const x = (Math.random() * 240) - 120;
+  const y = (Math.random() * 120) - 60;
+  deny.style.transform = `translate(${x}px,${y}px)`;
 
-        <section class="identity-wrap" id="identityWrap">
-          <h3 class="identity-title">Alright... how do you know me?</h3>
+  const labels = ["really?","nice try","not so fast","admit it","caught"];
+  deny.textContent = labels[Math.floor(Math.random() * labels.length)];
+}
 
-          <div class="identity-grid">
-            <button class="identity-card" data-profile="dazel">
-              <strong>I know you as Dazel</strong>
-              <span>streaming / creator side</span>
-            </button>
+deny.addEventListener("mouseenter", moveDeny);
+deny.addEventListener("click", moveDeny);
+deny.addEventListener("touchstart", event => {
+  event.preventDefault();
+  moveDeny();
+});
 
-            <button class="identity-card" data-profile="cartier">
-              <strong>I know you as Cart1er</strong>
-              <span>AKA Cart1er / chaos side</span>
-            </button>
-          </div>
+start.addEventListener("click", () => {
+  panel.style.display = "none";
+  scannerStage.classList.add("show");
+  scannerStage.scrollIntoView({behavior:"smooth", block:"center"});
+});
 
-          <div class="profile" id="dazelProfile">
-            <h3>Dazel</h3>
-            <p>So you found the streaming side. Fair enough.</p>
+scanButton.addEventListener("click", () => {
+  if (scanButton.disabled) return;
 
-            <div class="socials">
-              <a class="social-link" href="https://www.tiktok.com/@decartierrr" target="_blank" rel="noopener noreferrer">
-                <span>🎵 TikTok — @decartierrr</span><span>↗</span>
-              </a>
+  scanButton.disabled = true;
+  scanButton.textContent = "Scanning...";
+  verifyText.textContent = "0%";
+  verifyFill.style.width = "0%";
 
-              <a class="social-link" href="https://www.youtube.com/@dazelxml" target="_blank" rel="noopener noreferrer">
-                <span>▶️ YouTube — @dazelxml</span><span>↗</span>
-              </a>
-            </div>
-          </div>
+  let progress = 0;
 
-          <div class="profile" id="cartierProfile">
-            <h3>Cart1er</h3>
-            <p>So you know the AKA Cart1er version. Interesting choice.</p>
+  const timer = setInterval(() => {
+    progress += Math.floor(Math.random() * 8) + 4;
+    if (progress > 100) progress = 100;
 
-            <div class="socials">
-              <a class="social-link" href="https://www.instagram.com/decartierrr/" target="_blank" rel="noopener noreferrer">
-                <span>📷 Instagram — @decartierrr</span><span>↗</span>
-              </a>
+    verifyFill.style.width = progress + "%";
+    verifyText.textContent = progress < 100 ? progress + "%" : "Verification complete";
 
-              <a class="social-link" href="https://www.tiktok.com/@aliiyourbae" target="_blank" rel="noopener noreferrer">
-                <span>🎵 TikTok — @aliiyourbae</span><span>↗</span>
-              </a>
+    if (progress === 100) {
+      clearInterval(timer);
 
-              <a class="social-link" href="https://t.me/valhallagroupx" target="_blank" rel="noopener noreferrer">
-                <span>💬 Telegram — valhallagroupx</span><span>↗</span>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <div class="fine-print">entertainment only • no tracking • no data collection</div>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const scanBtn = document.getElementById("scanBtn");
-    const runaway = document.getElementById("runaway");
-    const proveBtn = document.getElementById("proveBtn");
-    const admitBtn = document.getElementById("admitBtn");
-    const fill = document.getElementById("fill");
-    const percent = document.getElementById("percent");
-    const scanStatus = document.getElementById("scanStatus");
-    const terminal = document.getElementById("terminal");
-    const results = document.getElementById("results");
-    const truthBox = document.getElementById("truthBox");
-    const identityWrap = document.getElementById("identityWrap");
-    const windowEl = document.getElementById("window");
-    const actions = document.getElementById("actions");
-    const dazelProfile = document.getElementById("dazelProfile");
-    const cartierProfile = document.getElementById("cartierProfile");
-
-    let scanning = false;
-    let escapeCount = 0;
-
-    const messages = [
-      "checking curiosity level...",
-      "detecting suspicious profile revisits...",
-      "searching for accidental screenshots...",
-      "estimating jealousy coefficient...",
-      "measuring stalking intensity...",
-      "calculating 'I was just curious' probability...",
-      "finalizing embarrassing report..."
-    ];
-
-    function addLine(text, delay = 0) {
       setTimeout(() => {
-        const line = document.createElement("div");
-        line.className = "terminal-line";
-        line.textContent = "> " + text;
-        terminal.appendChild(line);
-        terminal.scrollTop = terminal.scrollHeight;
-      }, delay);
+        scannerStage.classList.remove("show");
+        scannerStage.style.display = "none";
+        identityStage.classList.add("show");
+        identityStage.scrollIntoView({behavior:"smooth", block:"center"});
+      }, 450);
+    }
+  }, 105);
+});
+
+function socialLink(url, icon, label){
+  return `
+    <a class="social-link" target="_blank" rel="noopener noreferrer" href="${url}">
+      <img src="${icon}" alt="">
+      <strong>${label}</strong>
+      <span>↗</span>
+    </a>
+  `;
+}
+
+document.querySelectorAll("[data-profile]").forEach(button => {
+  button.addEventListener("click", () => {
+    const profile = button.dataset.profile;
+
+    if(profile === "dazel"){
+      content.innerHTML = `
+        <div class="profile-result">
+          <h3>Dazel</h3>
+          <p>You made it through. Here are the actual links.</p>
+          <div class="links">
+            ${socialLink(
+              "https://www.tiktok.com/@dazelxml",
+              "https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tiktok.svg",
+              "TikTok — @dazelxml"
+            )}
+            ${socialLink(
+              "https://www.youtube.com/@dazelxml",
+              "https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/youtube.svg",
+              "YouTube — @dazelxml"
+            )}
+          </div>
+        </div>`;
+    } else if(profile === "cartier"){
+      content.innerHTML = `
+        <div class="profile-result">
+          <h3>Cart1er</h3>
+          <p>You made it through. Here are the actual links.</p>
+          <div class="links">
+            ${socialLink(
+              "https://www.instagram.com/decartierrr/",
+              "https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/instagram.svg",
+              "Instagram — @decartierrr"
+            )}
+            ${socialLink(
+              "https://www.tiktok.com/@aliiyourbae",
+              "https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tiktok.svg",
+              "TikTok — @aliiyourbae"
+            )}
+            ${socialLink(
+              "https://t.me/valhallagroupx",
+              "https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/telegram.svg",
+              "Telegram — valhallagroupx"
+            )}
+            ${socialLink(
+              "https://open.spotify.com/user/62sosr22ko2z4idqadvijrrmv?si=81fdc35bd1d1428e",
+              "https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/spotify.svg",
+              "Spotify — Cart1er"
+            )}
+          </div>
+        </div>`;
+    } else {
+      content.innerHTML = `
+        <div class="profile-result">
+          <h3>Ali</h3>
+          <p>I'm not here anymore</p>
+        </div>`;
     }
 
-    function dodgeButton(button, container, labels) {
-      escapeCount += 1;
-
-      const maxX = Math.max(80, container.clientWidth - button.offsetWidth - 10);
-      const maxY = 95;
-      const x = Math.floor(Math.random() * maxX) - maxX / 2;
-      const y = Math.floor(Math.random() * maxY) - maxY / 2;
-
-      button.style.transform = `translate(${x}px, ${y}px) rotate(${(Math.random() * 10) - 5}deg)`;
-      button.textContent = labels[Math.min(escapeCount - 1, labels.length - 1)];
-    }
-
-    const runawayLabels = [
-      "nice try 😭",
-      "why are you chasing me?",
-      "just admit it 😂",
-      "still not stalking?",
-      "bro give up"
-    ];
-
-    ["mouseenter", "click"].forEach(eventName => {
-      runaway.addEventListener(eventName, () => dodgeButton(runaway, actions, runawayLabels));
-    });
-
-    runaway.addEventListener("touchstart", event => {
-      event.preventDefault();
-      dodgeButton(runaway, actions, runawayLabels);
-    });
-
-    function launchConfetti() {
-      const colors = ["#ff4db8", "#8b5cf6", "#59c7ff", "#42e58f", "#ffd166"];
-      for (let i = 0; i < 75; i++) {
-        const piece = document.createElement("div");
-        piece.className = "confetti";
-        piece.style.left = Math.random() * 100 + "vw";
-        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-        piece.style.animationDuration = 2.4 + Math.random() * 2.4 + "s";
-        piece.style.animationDelay = Math.random() * .45 + "s";
-        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
-        document.body.appendChild(piece);
-        setTimeout(() => piece.remove(), 5500);
-      }
-    }
-
-    function revealTruth() {
-      truthBox.classList.add("show");
-      identityWrap.classList.add("show");
-      truthBox.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-
-    admitBtn.addEventListener("click", () => {
-      launchConfetti();
-      revealTruth();
-    });
-
-    const proveLabels = [
-      "evidence loading...",
-      "wait, come back 😭",
-      "you look nervous",
-      "case closed 😂"
-    ];
-
-    proveBtn.addEventListener("mouseenter", () => {
-      const box = proveBtn.parentElement;
-      dodgeButton(proveBtn, box, proveLabels);
-    });
-
-    proveBtn.addEventListener("touchstart", event => {
-      event.preventDefault();
-      const box = proveBtn.parentElement;
-      dodgeButton(proveBtn, box, proveLabels);
-    });
-
-    proveBtn.addEventListener("click", revealTruth);
-
-    scanBtn.addEventListener("click", () => {
-      if (scanning) return;
-
-      scanning = true;
-      results.classList.remove("show");
-      truthBox.classList.remove("show");
-      identityWrap.classList.remove("show");
-      dazelProfile.classList.remove("show");
-      cartierProfile.classList.remove("show");
-
-      terminal.innerHTML = "<div>&gt; scan initiated...</div>";
-      fill.style.width = "0%";
-      percent.textContent = "0%";
-      scanBtn.disabled = true;
-      scanBtn.textContent = "scanning...";
-      runaway.style.display = "none";
-
-      messages.forEach((message, index) => addLine(message, 390 * (index + 1)));
-
-      let value = 0;
-      const timer = setInterval(() => {
-        value += Math.floor(Math.random() * 8) + 5;
-        if (value > 100) value = 100;
-
-        fill.style.width = value + "%";
-        percent.textContent = value + "%";
-        scanStatus.textContent = value < 100 ? "analyzing visitor behavior..." : "analysis complete";
-
-        if (value === 100) {
-          clearInterval(timer);
-
-          setTimeout(() => {
-            addLine("result: extreme stalker energy detected 😂");
-            results.classList.add("show");
-            windowEl.classList.add("shake");
-            scanBtn.textContent = "scan again";
-            scanBtn.disabled = false;
-            runaway.style.display = "inline-flex";
-            runaway.textContent = "nope, I wasn't stalking";
-            runaway.style.transform = "none";
-            scanning = false;
-
-            setTimeout(() => windowEl.classList.remove("shake"), 400);
-          }, 500);
-        }
-      }, 150);
-    });
-
-    document.querySelectorAll("[data-profile]").forEach(button => {
-      button.addEventListener("click", () => {
-        const profile = button.dataset.profile;
-        dazelProfile.classList.toggle("show", profile === "dazel");
-        cartierProfile.classList.toggle("show", profile === "cartier");
-      });
-    });
-  </script>
+    content.scrollIntoView({behavior:"smooth", block:"center"});
+  });
+});
+</script>
 </body>
 </html>
